@@ -218,7 +218,7 @@
     --shadow-h: 12px;
   }
   .candle-container{ padding:0 1rem; }
-  .candle-title{ font-size:2rem; margin-bottom:2rem; }
+  .candle-title{ font-size:2rem; margin-bottom:2rem; display: block; }
   .candle-item{ width:75px; height:170px; }
   .thanks-message{ top:-80px; padding:1rem 1.5rem; }
 }
