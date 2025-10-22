@@ -70,8 +70,8 @@
 
 @media (max-width: 768px) {
   .hero-portrait {
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: 130px;
     border: 2px solid #fff;
   }
 }
