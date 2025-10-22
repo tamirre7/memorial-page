@@ -241,10 +241,10 @@
 
 /* תיקון הטעות במובייל הקטן: "fill: white !;" */
 @media (max-width:480px){
-  .scroll-btn svg{ width:24px; height:24px; }
+  .scroll-btn svg{ width:28px; height:28px; }
 }
 
 /* לטאבלט ומטה – גודל חץ נוח */
 @media (max-width:768px){
-  .scroll-btn svg{ width:28px; height:28px; }
+  .scroll-btn svg{ width:32px; height:32px; }
 }
