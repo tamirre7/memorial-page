@@ -7,8 +7,6 @@ export default function Gallery() {
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollRef = useRef(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
 
   const mediaItems = [
     { type: "image", src: `${BASE}assets/images/gallery-01.jpg`, alt: "זיכרון של בן" },
@@ -35,30 +33,8 @@ export default function Gallery() {
     setSelectedMedia(mediaItems[next]);
   };
 
-  const checkScrollButtons = () => {
-    if (!scrollRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-    setCanScrollLeft(scrollLeft > 0);
-    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1);
-  };
-
-  const scrollLeft = () => {
-    scrollRef.current?.scrollBy({ left: 340, behavior: "smooth" });
-    setTimeout(checkScrollButtons, 350);
-  };
-
-  const scrollRight = () => {
-    scrollRef.current?.scrollBy({ left: -340, behavior: "smooth" });
-    setTimeout(checkScrollButtons, 350);
-  };
-
-  // Check scroll buttons on mount and resize
-  useEffect(() => {
-    checkScrollButtons();
-    const handleResize = () => checkScrollButtons();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const scrollLeft = () => scrollRef.current?.scrollBy({ left: 340,  behavior: "smooth" });
+  const scrollRight = () => scrollRef.current?.scrollBy({ left: -340, behavior: "smooth" });
 
   // ✨ ניווט במקלדת + החלקת אצבע במודל (רק על המדיה עצמה)
   useEffect(() => {
@@ -123,13 +99,11 @@ export default function Gallery() {
         <h2 className="gallery-title">זיכרונות של בן</h2>
 
         <div className="gallery-wrapper">
-          {canScrollLeft && (
-            <button className="scroll-btn scroll-left" onClick={scrollLeft} aria-label="גלילה ימינה">
-              <svg viewBox="0 0 24 24">
-                <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
-              </svg>
-            </button>
-          )}
+          <button className="scroll-btn scroll-left" onClick={scrollLeft} aria-label="גלילה ימינה">
+            <svg viewBox="0 0 24 24">
+              <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
+            </svg>
+          </button>
 
           <div className="gallery-scroll" ref={scrollRef}>
             <div className="gallery-track">
@@ -158,13 +132,11 @@ export default function Gallery() {
             </div>
           </div>
 
-          {canScrollRight && (
-            <button className="scroll-btn scroll-right" onClick={scrollRight} aria-label="גלילה שמאלה">
-              <svg viewBox="0 0 24 24">
-                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-              </svg>
-            </button>
-          )}
+          <button className="scroll-btn scroll-right" onClick={scrollRight} aria-label="גלילה שמאלה">
+            <svg viewBox="0 0 24 24">
+              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -183,4 +155,3 @@ export default function Gallery() {
     </section>
   );
 }
-

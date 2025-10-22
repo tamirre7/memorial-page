@@ -186,8 +186,8 @@
   .gallery-title{ font-size: 1.8rem; }
   .gallery-wrapper{ gap: .5rem; }
   .scroll-btn{
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
     background: #4a90e2;
     box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
     display: flex !important;
@@ -195,8 +195,8 @@
     justify-content: center;
   }
   .scroll-btn svg {
-    width: 36px;
-    height: 36px;
+    width: 48px;
+    height: 48px;
     fill: white;
     display: block !important;
   }
@@ -209,16 +209,16 @@
 @media (max-width:480px){
   .gallery-item{ width: 180px; height: 120px; }
   .scroll-btn{
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     display: flex !important;
     align-items: center;
     justify-content: center;
   }
   .scroll-btn svg {
-    width: 20px;
-    height: 20px;
-    fill: white !;
+    width: 40px;
+    height: 40px;
+    fill: white !important;
     display: block !important;
   }
   .gallery-track{ gap: .8rem; }

@@ -11,39 +11,40 @@ export default function Candle() {
   const [busy, setBusy] = useState(false);
 
   // Get server date in ISO format (YYYY-MM-DD)
-  const getServerDateISO = async () => {
-    const offsetRef = ref(database, ".info/serverTimeOffset");
-    const snapshot = await get(offsetRef);
-    const offset = snapshot.val() ?? 0;
-    const serverNow = Date.now() + offset;
-    return new Date(serverNow).toISOString().slice(0, 10); // YYYY-MM-DD (UTC)
-  };
+  // Get local date in ISO format (YYYY-MM-DD)
+const getServerDateISO = () => {
+  return new Date().toISOString().slice(0, 10);
+};
+
 
   // Load candle count from Firebase once
   useEffect(() => {
-    const candlesRef = ref(database, 'counters/candles');
-    get(candlesRef).then((snapshot) => {
+  const loadCandleData = async () => {
+    try {
+      // 1) טען את מונה הנרות מה־DB
+      const candlesRef = ref(database, 'counters/candles');
+      const snapshot = await get(candlesRef);
       const data = snapshot.val();
       if (data !== null) setCandlesLit(data);
-      setIsLoading(false);
-    });
 
-    // Check if user has already lit a candle today (using server time)
-    const checkCandleStatus = async () => {
-      try {
-        const todayKey = await getServerDateISO();
-        const lastLit = localStorage.getItem('candle_last_lit');
-        if (lastLit === todayKey) {
-          setIsLit(true);
-        }
-      } catch (error) {
-        console.warn('localStorage not available:', error);
-        // Continue without localStorage user can still light candle
+      // 2) הבא תאריך שרת (UTC, פורמט YYYY-MM-DD)
+      const todayKey = await getServerDateISO();
+
+      // 3) בדוק אם המשתמש כבר הדליק היום (לפי localStorage)
+      const lastLit = localStorage.getItem('candle_last_lit');
+      if (lastLit === todayKey) {
+        setIsLit(true);
       }
-    };
-    
-    checkCandleStatus();
-  }, []);
+    } catch (err) {
+      console.error('Error loading candle data:', err);
+      // לא חוסם את המשתמש; פשוט נמשיך
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  loadCandleData();
+}, []); // ← חשוב מאוד! סוגריים עגולים + סוגריים מסולסלות + סוגריים מרובעים
 
   const lightCandle = async () => {
     if (isLit || isLoading || busy) return;
@@ -77,7 +78,7 @@ export default function Candle() {
         setShowThanks(true);
         setTimeout(() => {
           setShowThanks(false);
-        }, 500);
+        }, 2000);
       }, 1000);
     } catch (error) {
       console.error('Error lighting candle:', error);
