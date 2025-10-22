@@ -2,7 +2,6 @@ import Hero from "./components/Hero/Hero";
 import Story from "./components/Story/Story";
 import Gallery from "./components/Gallery/Gallery";
 import Candle from "./components/Candle/Candle";
-import Friends from "./components/Friends/Friends";
 import Footer from "./components/Footer/Footer";
 
 function App() {
@@ -19,9 +18,6 @@ function App() {
 
       {/* Candle section */}
       <Candle />
-
-      {/* Friends section */}
-      <Friends />
 
       {/* Footer */}
       <Footer />
