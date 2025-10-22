@@ -17,7 +17,7 @@ export default function Candle() {
         setTimeout(() => {
           setShowThanks(false);
         }, 3000);
-      }, 2000);
+      }, 1000);
     }
   };
 

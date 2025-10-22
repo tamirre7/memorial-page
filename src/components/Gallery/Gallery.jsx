@@ -9,7 +9,7 @@ export default function Gallery() {
 
   const mediaItems = [
     { type: "image", src: `${BASE}assets/images/gallery-01.jpg`, alt: "זיכרון של בן" },
-    { type: "video", src: `${BASE}assets/video/gallery-01.mp4`, poster: `${BASE}assets/images/gallery-01.jpg`, alt: "סרטון של בן" },
+    { type: "video", src: `${BASE}assets/video/gallery-01.mp4`, alt: "סרטון של בן" },
     { type: "image", src: `${BASE}assets/images/gallery-02.jpg`, alt: "זיכרון של בן" },
     { type: "image", src: `${BASE}assets/images/gallery-03.jpg`, alt: "זיכרון של בן" },
     { type: "image", src: `${BASE}assets/images/gallery-04.jpg`, alt: "זיכרון של בן" },
@@ -43,8 +43,7 @@ export default function Gallery() {
                         src={item.src}
                         className="gallery-media focus-bottom"
                         muted
-                        preload="metadata"
-                        poster={item.poster}
+                        preload="none"
                       />
                       <div className="play-overlay">
                         <svg className="play-icon" viewBox="0 0 24 24" fill="currentColor">
