@@ -5,6 +5,7 @@ const BASE = import.meta.env.BASE_URL;
 
 export default function Gallery() {
   const [selectedMedia, setSelectedMedia] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const scrollRef = useRef(null);
 
   const mediaItems = [
@@ -15,7 +16,10 @@ export default function Gallery() {
     { type: "image", src: `${BASE}assets/images/gallery-04.jpg`, alt: "זיכרון של בן" },
   ];
 
-  const openMedia = (item) => setSelectedMedia(item);
+  const openMedia = (item, index) => {
+    setSelectedMedia(item);
+    setCurrentIndex(index);
+  };
   const closeMedia = () => setSelectedMedia(null);
 
   const scrollLeft = () => scrollRef.current?.scrollBy({ left: 320,  behavior: "smooth" });
@@ -26,8 +30,16 @@ export default function Gallery() {
     if (!selectedMedia) return;
 
     const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') scrollRight();
-      if (e.key === 'ArrowRight') scrollLeft();
+      if (e.key === 'ArrowLeft') {
+        const prevIndex = (currentIndex - 1 + mediaItems.length) % mediaItems.length;
+        setCurrentIndex(prevIndex);
+        setSelectedMedia(mediaItems[prevIndex]);
+      }
+      if (e.key === 'ArrowRight') {
+        const nextIndex = (currentIndex + 1) % mediaItems.length;
+        setCurrentIndex(nextIndex);
+        setSelectedMedia(mediaItems[nextIndex]);
+      }
       if (e.key === 'Escape') closeMedia();
     };
 
@@ -40,9 +52,15 @@ export default function Gallery() {
         
         if (Math.abs(diff) > 50) { // Minimum swipe distance
           if (diff > 0) {
-            scrollLeft(); // Swipe left = go right
+            // Swipe left = go to next
+            const nextIndex = (currentIndex + 1) % mediaItems.length;
+            setCurrentIndex(nextIndex);
+            setSelectedMedia(mediaItems[nextIndex]);
           } else {
-            scrollRight(); // Swipe right = go left
+            // Swipe right = go to previous
+            const prevIndex = (currentIndex - 1 + mediaItems.length) % mediaItems.length;
+            setCurrentIndex(prevIndex);
+            setSelectedMedia(mediaItems[prevIndex]);
           }
         }
       };
@@ -57,7 +75,7 @@ export default function Gallery() {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('touchstart', handleTouchStart);
     };
-  }, [selectedMedia]);
+  }, [selectedMedia, currentIndex, mediaItems]);
 
   return (
     <section className="gallery" dir="rtl">
@@ -74,7 +92,7 @@ export default function Gallery() {
           <div className="gallery-scroll" ref={scrollRef}>
             <div className="gallery-track">
               {mediaItems.map((item, index) => (
-                <div key={index} className="gallery-item" onClick={() => openMedia(item)}>
+                <div key={index} className="gallery-item" onClick={() => openMedia(item, index)}>
                   {item.type === "video" ? (
                     <>
                       <video

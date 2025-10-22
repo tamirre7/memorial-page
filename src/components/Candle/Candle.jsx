@@ -29,14 +29,20 @@ export default function Candle() {
     });
 
     // Check if user has already lit a candle today (using server time)
-    getServerDateISO().then(todayKey => {
+    const checkCandleStatus = async () => {
       try {
-        if (localStorage.getItem('candle_last_lit') === todayKey) setIsLit(true);
+        const todayKey = await getServerDateISO();
+        const lastLit = localStorage.getItem('candle_last_lit');
+        if (lastLit === todayKey) {
+          setIsLit(true);
+        }
       } catch (error) {
         console.warn('localStorage not available:', error);
         // Continue without localStorage user can still light candle
       }
-    });
+    };
+    
+    checkCandleStatus();
   }, []);
 
   const lightCandle = async () => {
