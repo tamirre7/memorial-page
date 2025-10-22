@@ -59,6 +59,11 @@ export default function Candle() {
         }
         setIsLit(true);
         setCandlesLit(snapshot.val() ?? 0);
+      } else {
+        // If transaction failed, still light the candle locally
+        console.warn('Transaction failed, lighting candle locally');
+        setIsLit(true);
+        setCandlesLit(prev => prev + 1);
       }
 
       // Show thanks message after animation
@@ -70,6 +75,9 @@ export default function Candle() {
       }, 1000);
     } catch (error) {
       console.error('Error lighting candle:', error);
+      // Fallback: light candle locally even if Firebase fails
+      setIsLit(true);
+      setCandlesLit(prev => prev + 1);
     } finally {
       setBusy(false);
     }

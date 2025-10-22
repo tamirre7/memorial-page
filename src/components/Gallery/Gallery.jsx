@@ -1,5 +1,5 @@
 import "./Gallery.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -9,7 +9,7 @@ export default function Gallery() {
 
   const mediaItems = [
     { type: "image", src: `${BASE}assets/images/gallery-01.jpg`, alt: "זיכרון של בן" },
-    { type: "video", src: `${BASE}assets/video/gallery-01.mp4`, poster: `${BASE}assets/images/video-tn.jpg`, alt: "סרטון של בן" },
+    { type: "video", src: `${BASE}assets/video/gallery-01.mp4`, poster: `${BASE}assets/images/video-tn.png`, alt: "סרטון של בן" },
     { type: "image", src: `${BASE}assets/images/gallery-02.jpg`, alt: "זיכרון של בן" },
     { type: "image", src: `${BASE}assets/images/gallery-03.jpg`, alt: "זיכרון של בן" },
     { type: "image", src: `${BASE}assets/images/gallery-04.jpg`, alt: "זיכרון של בן" },
@@ -20,6 +20,44 @@ export default function Gallery() {
 
   const scrollLeft = () => scrollRef.current?.scrollBy({ left: 320,  behavior: "smooth" });
   const scrollRight = () => scrollRef.current?.scrollBy({ left: -320, behavior: "smooth" });
+
+  // Add swipe navigation in modal
+  useEffect(() => {
+    if (!selectedMedia) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowLeft') scrollRight();
+      if (e.key === 'ArrowRight') scrollLeft();
+      if (e.key === 'Escape') closeMedia();
+    };
+
+    const handleTouchStart = (e) => {
+      const startX = e.touches[0].clientX;
+      
+      const handleTouchEnd = (e) => {
+        const endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+        
+        if (Math.abs(diff) > 50) { // Minimum swipe distance
+          if (diff > 0) {
+            scrollLeft(); // Swipe left = go right
+          } else {
+            scrollRight(); // Swipe right = go left
+          }
+        }
+      };
+
+      document.addEventListener('touchend', handleTouchEnd, { once: true });
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('touchstart', handleTouchStart);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('touchstart', handleTouchStart);
+    };
+  }, [selectedMedia]);
 
   return (
     <section className="gallery" dir="rtl">
