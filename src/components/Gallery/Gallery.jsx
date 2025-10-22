@@ -22,79 +22,76 @@ export default function Gallery() {
   };
   const closeMedia = () => setSelectedMedia(null);
 
+  const handlePrev = () => {
+    const prev = (currentIndex - 1 + mediaItems.length) % mediaItems.length;
+    setCurrentIndex(prev);
+    setSelectedMedia(mediaItems[prev]);
+  };
+  const handleNext = () => {
+    const next = (currentIndex + 1) % mediaItems.length;
+    setCurrentIndex(next);
+    setSelectedMedia(mediaItems[next]);
+  };
+
   const scrollLeft = () => scrollRef.current?.scrollBy({ left: 340,  behavior: "smooth" });
   const scrollRight = () => scrollRef.current?.scrollBy({ left: -340, behavior: "smooth" });
 
-  // Add swipe navigation in modal
+  // ✨ ניווט במקלדת + החלקת אצבע במודל (רק על המדיה עצמה)
   useEffect(() => {
     if (!selectedMedia) return;
 
-    let startX = 0;
-    let startY = 0;
-    let isSwiping = false;
-
+    // תמיכה במקלדת (שמאל/ימין/ESC)
     const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') {
-        const prevIndex = (currentIndex - 1 + mediaItems.length) % mediaItems.length;
-        setCurrentIndex(prevIndex);
-        setSelectedMedia(mediaItems[prevIndex]);
-      }
-      if (e.key === 'ArrowRight') {
-        const nextIndex = (currentIndex + 1) % mediaItems.length;
-        setCurrentIndex(nextIndex);
-        setSelectedMedia(mediaItems[nextIndex]);
-      }
-      if (e.key === 'Escape') closeMedia();
+      if (e.key === "ArrowLeft")  handlePrev();
+      if (e.key === "ArrowRight") handleNext();
+      if (e.key === "Escape")     closeMedia();
     };
+    document.addEventListener("keydown", handleKeyDown);
+
+    // מאזינים לנגיעות – רק על אלמנט המדיה במודל
+    const modalEl = document.querySelector(".modal-media");
+    if (!modalEl) {
+      return () => document.removeEventListener("keydown", handleKeyDown);
+    }
+
+    let startX = 0;
+    let isSwiping = false;
 
     const handleTouchStart = (e) => {
       startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
       isSwiping = true;
     };
 
     const handleTouchMove = (e) => {
       if (!isSwiping) return;
-      e.preventDefault(); // Prevent scrolling while swiping
+      const moveX = e.touches[0].clientX - startX;
+      modalEl.style.transform = `translateX(${moveX * 0.3}px)`; // תחושת גרירה עדינה
     };
 
     const handleTouchEnd = (e) => {
       if (!isSwiping) return;
+      const endX = e.changedTouches[0].clientX;
+      const diff = endX - startX;
+
+      // החזרת התמונה למקום
+      modalEl.style.transform = "translateX(0)";
       isSwiping = false;
 
-      const endX = e.changedTouches[0].clientX;
-      const endY = e.changedTouches[0].clientY;
-      const diffX = startX - endX;
-      const diffY = startY - endY;
-
-      // Only consider horizontal swipes (ignore vertical scrolls)
-      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 30) { // Reduced threshold for better responsiveness
-        if (diffX > 0) {
-          // Swipe left = go to next
-          const nextIndex = (currentIndex + 1) % mediaItems.length;
-          setCurrentIndex(nextIndex);
-          setSelectedMedia(mediaItems[nextIndex]);
-        } else {
-          // Swipe right = go to previous
-          const prevIndex = (currentIndex - 1 + mediaItems.length) % mediaItems.length;
-          setCurrentIndex(prevIndex);
-          setSelectedMedia(mediaItems[prevIndex]);
-        }
-      }
+      if (diff > 50)      handlePrev(); // גרירה ימינה
+      else if (diff < -50) handleNext(); // גרירה שמאלה
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('touchstart', handleTouchStart);
-    document.addEventListener('touchmove', handleTouchMove);
-    document.addEventListener('touchend', handleTouchEnd);
+    modalEl.addEventListener("touchstart", handleTouchStart, { passive: true });
+    modalEl.addEventListener("touchmove",  handleTouchMove,  { passive: true });
+    modalEl.addEventListener("touchend",   handleTouchEnd);
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('touchstart', handleTouchStart);
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('touchend', handleTouchEnd);
+      document.removeEventListener("keydown", handleKeyDown);
+      modalEl.removeEventListener("touchstart", handleTouchStart);
+      modalEl.removeEventListener("touchmove",  handleTouchMove);
+      modalEl.removeEventListener("touchend",   handleTouchEnd);
     };
-  }, [selectedMedia, currentIndex, mediaItems]);
+  }, [selectedMedia, currentIndex]); // mediaItems קבוע; אין צורך להוסיף לתלויות
 
   return (
     <section className="gallery" dir="rtl">
@@ -103,7 +100,7 @@ export default function Gallery() {
 
         <div className="gallery-wrapper">
           <button className="scroll-btn scroll-left" onClick={scrollLeft} aria-label="גלילה ימינה">
-            <svg viewBox="0 0 24 24" fill="currentColor">
+            <svg viewBox="0 0 24 24">
               <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
             </svg>
           </button>
@@ -122,7 +119,7 @@ export default function Gallery() {
                         poster={item.poster}
                       />
                       <div className="play-overlay">
-                        <svg className="play-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <svg className="play-icon" viewBox="0 0 24 24">
                           <path d="M8 5v14l11-7z"/>
                         </svg>
                       </div>
@@ -136,7 +133,7 @@ export default function Gallery() {
           </div>
 
           <button className="scroll-btn scroll-right" onClick={scrollRight} aria-label="גלילה שמאלה">
-            <svg viewBox="0 0 24 24" fill="currentColor">
+            <svg viewBox="0 0 24 24">
               <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
             </svg>
           </button>

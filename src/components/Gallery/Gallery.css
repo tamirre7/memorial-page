@@ -42,7 +42,7 @@
 
 .gallery-track {
   display: flex;
-  gap: 1rem;
+  gap: 1.2rem;
   padding: 0 0.5rem;
   min-width: max-content;
 }
@@ -95,8 +95,8 @@
 .gallery-item {
   position: relative;
   flex-shrink: 0;
-  width: 320px;
-  height: 220px;
+  width: 360px;
+  height: 250px;
   border-radius: 15px;
   overflow: hidden;
   cursor: pointer;
@@ -186,8 +186,8 @@
   .gallery-title{ font-size: 1.8rem; }
   .gallery-wrapper{ gap: .5rem; }
   .scroll-btn{
-    width: 70px;
-    height: 70px;
+    width: 260px;
+    height: 180px;
     background: #4a90e2;
     box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
     display: flex !important;
@@ -209,8 +209,8 @@
 @media (max-width:480px){
   .gallery-item{ width: 180px; height: 120px; }
   .scroll-btn{
-    width: 35px;
-    height: 35px;
+    width: 200px;
+    height: 140px;
     display: flex !important;
     align-items: center;
     justify-content: center;
@@ -218,7 +218,7 @@
   .scroll-btn svg {
     width: 20px;
     height: 20px;
-    fill: white;
+    fill: white !important;
     display: block !important;
   }
   .gallery-track{ gap: .8rem; }
