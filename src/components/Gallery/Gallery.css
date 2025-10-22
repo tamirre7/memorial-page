@@ -223,3 +223,28 @@
   }
   .gallery-track{ gap: .8rem; }
 }
+
+/* --- FIX: להציג את החצים על הכפתורים במובייל --- */
+
+/* צבע ברירת מחדל ללחצן ול־SVG שבתוכו */
+.scroll-btn{ color:#fff; }
+
+/* כל הצורות בתוך ה-SVG יקבלו לבן, לא משנה אם הן fill או stroke */
+.scroll-btn svg,
+.scroll-btn svg *{
+  fill: #fff !important;
+  stroke: #fff !important;
+  stroke-width: 2;                /* לחיצות קו דקות ייראו טוב */
+  vector-effect: non-scaling-stroke;
+  display: block !important;
+}
+
+/* תיקון הטעות במובייל הקטן: "fill: white !;" */
+@media (max-width:480px){
+  .scroll-btn svg{ width:20px; height:20px; }
+}
+
+/* לטאבלט ומטה – גודל חץ נוח */
+@media (max-width:768px){
+  .scroll-btn svg{ width:22px; height:22px; }
+}
