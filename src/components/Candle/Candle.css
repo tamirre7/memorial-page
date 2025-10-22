@@ -1,0 +1,214 @@
+:root{
+  /* sizes */
+  --candle-w: 80px;
+  --candle-h: 160px;
+  --rim-w: 72px;
+  --rim-h: 16px;
+  --flame-w: 18px;
+  --flame-h: 36px;
+  --shadow-w: 72px;
+  --shadow-h: 14px;
+
+  /* colors */
+  --wax-top:   #fff1b0;
+  --wax-mid:   #ffd15e;
+  --wax-bot:   #ffb84d;
+
+  --wick-top:  #2b1b0a;
+  --wick-bot:  #1a0d05;
+
+  --flame-red:   #ff4500;
+  --flame-orange:#ff6a33;
+  --flame-gold:  #ffd400;
+  --flame-yellow:#ffff66;
+
+  /* shadows */
+  --outer-glow: rgba(255,180,60,.35);
+}
+
+/* ========== 2) Layout wrappers ========== */
+.candle-section{
+  background: transparent;
+  padding: 1.5rem 0 3rem;
+  display:flex; align-items:center; justify-content:center;
+  margin-top:0;
+}
+
+.candle-container{
+  max-width:600px; margin:0 auto; padding:0 2rem; text-align:center;
+}
+
+.candle-title{
+  font-size:2.5rem; font-weight:700; color:#2c3e50;
+  margin-bottom:3rem; text-shadow:0 2px 4px rgba(0,0,0,.1);
+}
+
+.candle-interactive{ position:relative; margin-bottom:3rem; }
+.candle-wrapper{ cursor:pointer; display:inline-block; transition:transform .3s ease; }
+.candle-wrapper:hover{ transform:scale(1.05); }
+
+/* ========== 3) Candle component ========== */
+.candle-item{
+  position:relative;
+  width: calc(var(--candle-w) + 12px);   /* מעט מקום סביב */
+  height: 210px;
+  margin:0 auto;
+}
+
+.candle-body{
+  width:var(--candle-w);
+  height:var(--candle-h);
+  margin:0 auto;
+  position:relative;
+  background: linear-gradient(180deg,var(--wax-top) 0%, #ffe08f 18%, var(--wax-mid) 58%, var(--wax-bot) 100%);
+  border-radius: 40px / 12px;            /* ↓ מקטין את הכיפה העליונה */
+  box-shadow:
+    inset 0 6px 10px rgba(255,255,255,.28), /* היילייט רך בלבד */
+    inset 0 1px 0 rgba(0,0,0,.06),          /* קצה עדין */
+    inset 0 -4px 8px rgba(0,0,0,.10),
+    0 0 22px var(--outer-glow);
+  border:1px solid rgba(0,0,0,.05);
+  z-index:2;
+  overflow:visible;
+}
+
+
+
+.candle-body::before{
+  content:''; position:absolute;
+  top:3px; left:50%; transform:translateX(-50%);
+  width:2px; height:12px;
+  background: linear-gradient(180deg,var(--wick-top) 0%, var(--wick-bot) 100%);
+  border-radius:2px;
+  box-shadow: 0 -1px 1px rgba(255,255,255,.28), 0 2px 2px rgba(0,0,0,.25);
+  z-index:4;
+}
+
+.candle-body::after{
+  content:'';
+  position:absolute;
+  top:0; left:50%; transform:translateX(-50%);
+  width: calc(var(--candle-w) - 8px);     /* צר מהגוף => אין בליטות בצדדים */
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center,
+      rgba(255,245,200,.75) 0%,
+      rgba(255,230,150,.45) 55%,
+      rgba(0,0,0,.08) 95%,
+      transparent 100%);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.06);
+  opacity:.75;
+  z-index:3;                 /* מתחת לפתיל */
+  pointer-events:none;
+}
+
+
+.candle-item::before{
+  content:'';
+  position:absolute;
+  top:8px; left:50%; transform:translateX(-50%);
+  width:14px; height:5px; border-radius:50%;
+  background: radial-gradient(ellipse at center,
+      rgba(0,0,0,.14) 0%,
+      rgba(0,0,0,.07) 60%,
+      transparent 85%);
+  filter: blur(.4px);
+  opacity:.35;
+  z-index:3;
+}
+
+
+/* soft aura behind candle */
+.candle-item::after{
+  content:'';
+  position:absolute;
+  top:-28px; left:50%; transform:translateX(-50%);
+  width:130px; height:230px; border-radius:60px;
+  background: radial-gradient(circle, rgba(255,220,100,.22) 0%, transparent 70%);
+  z-index:0;
+}
+
+/* ground shadow (replaces the old brown base) */
+.candle-shadow{
+  position:absolute;
+  bottom:8px; left:50%; transform:translateX(-50%);
+  width:var(--shadow-w); height:var(--shadow-h); border-radius:50%;
+  background: radial-gradient(ellipse at center,
+     rgba(0,0,0,.28) 0%, rgba(0,0,0,.12) 55%, transparent 80%);
+  filter:blur(2px);
+  z-index:1;
+}
+
+/* ========== 4) Flame ========== */
+.flame{
+  position:absolute;
+  top:-30px; left:50%; transform:translateX(-50%);
+  width:var(--flame-w); height:var(--flame-h);
+  background: radial-gradient(ellipse 60% 100% at 50% 20%,
+     var(--flame-red) 0%, var(--flame-orange) 28%,
+     var(--flame-gold) 62%, var(--flame-yellow) 85%, transparent 100%);
+  border-radius:50% 50% 45% 45% / 65% 65% 40% 40%;
+  filter:blur(.4px);
+  opacity:0; transition:opacity .5s ease, transform .5s ease, filter .5s ease;
+  z-index:5; pointer-events:none;
+}
+
+/* inner white core */
+.flame::after{
+  content:''; position:absolute;
+  top:30%; left:50%; transform:translate(-50%,-50%);
+  width:6px; height:10px; border-radius:50%;
+  background: radial-gradient(circle, #fff 0%, rgba(255,255,255,.5) 70%, transparent 100%);
+  opacity:.9;
+}
+
+.flame.burning{ opacity:1; animation:flicker 1.5s ease-in-out infinite alternate; }
+
+@keyframes flicker{
+  0%   { transform:translateX(-50%) scale(1) rotate(-3deg); filter:blur(.5px) brightness(1); }
+  25%  { transform:translateX(-50%) scale(1.12) rotate(2deg);  filter:blur(.3px) brightness(1.1); }
+  50%  { transform:translateX(-50%) scale(.9)  rotate(-2deg);  filter:blur(.7px) brightness(.95); }
+  75%  { transform:translateX(-50%) scale(1.08) rotate(1deg);  filter:blur(.4px) brightness(1.05); }
+  100% { transform:translateX(-50%) scale(1)   rotate(-1deg);  filter:blur(.5px) brightness(1); }
+}
+
+/* ========== 5) Thanks popup & Counter ========== */
+.thanks-message{
+  position:absolute; top:-100px; left:50%; transform:translateX(-50%);
+  background: linear-gradient(135deg,#4a90e2 0%, #357abd 100%);
+  color:#fff; padding:1.5rem 2rem; border-radius:15px;
+  box-shadow:0 8px 25px rgba(74,144,226,.4);
+  animation:slideDown .5s ease-out;
+  z-index:10;
+}
+@keyframes slideDown{
+  from { opacity:0; transform:translateX(-50%) translateY(-20px); }
+  to   { opacity:1; transform:translateX(-50%) translateY(0); }
+}
+
+.candle-counter{
+  background:rgba(255,255,255,.8);
+  padding:2rem; border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,.1);
+  backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,.3);
+}
+
+.counter-number{ font-size:3rem; font-weight:800; color:#4a90e2; margin-bottom:.5rem; text-shadow:0 2px 4px rgba(0,0,0,.1); }
+.counter-text{ font-size:1.2rem; color:#2c3e50; font-weight:500; }
+
+/* ========== 6) Responsive ========== */
+@media (max-width:768px){
+  :root{
+    --candle-w: 60px;
+    --candle-h: 140px;
+    --rim-w: 60px;
+    --rim-h: 14px;
+    --flame-w: 14px;
+    --flame-h: 30px;
+    --shadow-w: 62px;
+    --shadow-h: 12px;
+  }
+  .candle-container{ padding:0 1rem; }
+  .candle-title{ font-size:2rem; margin-bottom:2rem; }
+  .candle-item{ width:75px; height:170px; }
+  .thanks-message{ top:-80px; padding:1rem 1.5rem; }
+}

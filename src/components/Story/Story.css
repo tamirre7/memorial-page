@@ -1,0 +1,158 @@
+.story{
+  background: transparent;
+  padding: 1.5rem 0;
+  display: flex;
+  align-items: center;
+  margin-top: 0;
+}
+
+.story-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.story-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.story-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+  text-align: right;
+}
+
+.audio-player-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+}
+
+.audio-player-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+}
+
+.audio-player-btn.playing {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.audio-player-btn.playing:hover {
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
+.play-icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.story-content {
+  line-height: 1.8;
+  color: #2c3e50;
+}
+
+
+.story-text {
+  background: rgba(255, 255, 255, 0.6);
+  padding: 2rem;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 1.5rem;
+}
+
+.story-text p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  text-align: justify;
+}
+
+.story-text p:last-child {
+  margin-bottom: 0;
+}
+
+.story-signature {
+  font-style: italic;
+  font-weight: 600;
+  color: #2c3e50;
+  text-align: center;
+  margin-top: 1.5rem !important;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(44, 62, 80, 0.2);
+}
+
+.story-quote-section {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.story-quote {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  color: white;
+  padding: 2.5rem 3rem;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(44, 62, 80, 0.3);
+  max-width: 600px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.story-quote blockquote {
+  font-size: 1.8rem;
+  font-style: italic;
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+  font-family: 'Georgia', serif;
+  font-weight: 500;
+}
+
+.story-quote cite {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  font-style: normal;
+  font-weight: 400;
+}
+
+@media (max-width: 768px) {
+  .story-header {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+  }
+  
+  .story-title {
+    font-size: 2rem;
+  }
+  
+  .story-container {
+    padding: 0 1rem;
+  }
+  
+  .story-text {
+    padding: 1.5rem;
+  }
+  
+  .story-quote {
+    padding: 2rem;
+  }
+}
