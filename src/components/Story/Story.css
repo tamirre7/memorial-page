@@ -135,13 +135,22 @@
 
 @media (max-width: 768px) {
   .story-header {
-    flex-direction: column;
-    gap: 1.5rem;
-    text-align: center;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
   }
   
   .story-title {
     font-size: 2rem;
+    flex: 1;
+    text-align: right;
+  }
+  
+  .audio-player-btn {
+    flex-shrink: 0;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
   }
   
   .story-container {
