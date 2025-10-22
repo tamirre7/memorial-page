@@ -26,14 +26,18 @@ export default function Gallery() {
   const closeMedia = () => setSelectedMedia(null);
 
   const handlePrev = () => {
-    const prev = (currentIndex - 1 + mediaItems.length) % mediaItems.length;
-    setCurrentIndex(prev);
-    setSelectedMedia(mediaItems[prev]);
+    if (currentIndex > 0) {
+      const prev = currentIndex - 1;
+      setCurrentIndex(prev);
+      setSelectedMedia(mediaItems[prev]);
+    }
   };
   const handleNext = () => {
-    const next = (currentIndex + 1) % mediaItems.length;
-    setCurrentIndex(next);
-    setSelectedMedia(mediaItems[next]);
+    if (currentIndex < mediaItems.length - 1) {
+      const next = currentIndex + 1;
+      setCurrentIndex(next);
+      setSelectedMedia(mediaItems[next]);
+    }
   };
 
   const scrollLeft = () => scrollRef.current?.scrollBy({ left: 340,  behavior: "smooth" });
@@ -80,8 +84,8 @@ export default function Gallery() {
       modalEl.style.transform = "translateX(0)";
       isSwiping = false;
 
-      if (diff > 50)      handlePrev(); // גרירה ימינה
-      else if (diff < -50) handleNext(); // גרירה שמאלה
+      if (diff > 50 && currentIndex > 0)      handlePrev(); // גרירה ימינה - רק אם לא בתחילת הגלריה
+      else if (diff < -50 && currentIndex < mediaItems.length - 1) handleNext(); // גרירה שמאלה - רק אם לא בסוף הגלריה
     };
 
     modalEl.addEventListener("touchstart", handleTouchStart, { passive: true });
