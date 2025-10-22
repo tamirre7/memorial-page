@@ -88,6 +88,7 @@ useEffect(() => {
     <section className="candle-section" dir="rtl">
       <div className="candle-container">
         <h2 className="candle-title">הדלק נר לזכרו של בן</h2>
+        <p className="candle-subtitle">לחץ על הנר כדי להדליק</p>
         
         <div className="candle-interactive">
           <div 
