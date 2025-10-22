@@ -186,8 +186,8 @@
   .gallery-title{ font-size: 1.8rem; }
   .gallery-wrapper{ gap: .5rem; }
   .scroll-btn{
-    width: 260px;
-    height: 180px;
+    width: 48px;
+    height: 48px;
     background: #4a90e2;
     box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
     display: flex !important;
