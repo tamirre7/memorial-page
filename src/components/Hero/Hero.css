@@ -1,9 +1,8 @@
+/* ===== HERO ===== */
 .hero {
   position: relative;
-  width: 100vw;
-  height: 30vh;
-  min-height: 250px;
-  max-height: 400px;
+  width: 100%;
+  height: clamp(240px, 35vh, 400px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,64 +11,66 @@
   overflow: hidden;
   color: #fff;
   background-color: #000;
-  margin-left: calc(-50vw + 50%);
+  /* היה כאן margin-left: calc(-50vw + 50%); — הסרנו כדי לא לשבור מובייל */
 }
 
-.hero-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
+.hero-background { position: absolute; inset: 0; z-index: 0; }
+.hero-bg-image   { width: 100%; height: 100%; object-fit: cover; }
 
-.hero-bg-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-.hero-content {
+/* תוכן מעל התמונה */
+.hero-content{
   position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  padding: 2rem;
-  border-radius: 1.5rem;
-  background: rgba(0, 0, 0, 0.2);
+  gap: 1rem;
+  padding: clamp(10px, 3vw, 20px);
+  border-radius: 16px;
+  background: rgba(0,0,0,.25);
   backdrop-filter: blur(3px);
 }
 
-.hero-portrait {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  border: 3px solid #fff;
+/* תמונת פורטרט עגולה */
+.hero-portrait{
+  width: clamp(90px, 22vw, 150px);
+  height: clamp(90px, 22vw, 150px);
+  border-radius: 999px;
+  border: 4px solid rgba(255,255,255,.9);
   object-fit: cover;
+  object-position: center;
+  flex: 0 0 auto;
+  box-shadow: 0 10px 25px rgba(0,0,0,.35);
 }
 
-.hero-name {
-  font-size: 3.2rem;
+.hero-name{
+  font-size: clamp(28px, 8vw, 44px);
+  line-height: 1.1;
   margin: 0;
-  font-weight: 700;
-  text-shadow: 
-    3px 3px 6px rgba(0, 0, 0, 0.9),
-    1px 1px 2px rgba(0, 0, 0, 0.8),
-    0 0 10px rgba(0, 0, 0, 0.7);
+  text-shadow:
+    2px 2px 4px rgba(0,0,0,.9),
+    0 0 8px rgba(0,0,0,.6);
   color: #fff;
+  font-weight: 800;
 }
 
-.hero-years {
-  font-size: 1.8rem;
-  opacity: 0.95;
-  margin: 0.5rem 0 0;
-  text-shadow: 
-    2px 2px 4px rgba(0, 0, 0, 0.9),
-    1px 1px 2px rgba(0, 0, 0, 0.8),
-    0 0 8px rgba(0, 0, 0, 0.6);
+.hero-years{
+  font-size: clamp(14px, 4.5vw, 18px);
+  opacity: .95;
+  margin: .25rem 0 0;
+  text-shadow:
+    2px 2px 4px rgba(0,0,0,.9),
+    0 0 8px rgba(0,0,0,.6);
   color: #fff;
   font-weight: 600;
+}
+
+/* מובייל: לסדר בעמודה ולמרכז */
+@media (max-width: 640px){
+  .hero-content{
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+    margin-inline: 16px;
+    text-align: center;
+  }
 }
