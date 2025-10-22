@@ -4,6 +4,7 @@ import Gallery from "./components/Gallery/Gallery";
 import Candle from "./components/Candle/Candle";
 import Footer from "./components/Footer/Footer";
 
+// Main App component - renders all sections of the memorial page
 function App() {
   return (
     <div className="page-soft-bg">

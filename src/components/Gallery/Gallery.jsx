@@ -1,13 +1,16 @@
 import "./Gallery.css";
 import { useState, useRef, useEffect } from "react";
 
+// Base URL for assets
 const BASE = import.meta.env.BASE_URL;
 
 export default function Gallery() {
+  // State for modal media and current index
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollRef = useRef(null);
 
+  // Array of media items with type, src, alt, and optional classes
   const mediaItems = [
     { type: "image", src: `${BASE}assets/images/gallery-01.jpg`, alt: "זיכרון של בן", previewClass: "focus-top-more" },
     { type: "video", src: `${BASE}assets/video/gallery-01.mp4`, poster: `${BASE}assets/images/video-tn.png`, alt: "סרטון של בן" },
@@ -19,78 +22,111 @@ export default function Gallery() {
     { type: "image", src: `${BASE}assets/images/portrait.jpg`, alt: "פורטרט של בן", previewClass: "focus-top", modalClass: "focus-top" },
   ];
 
+  // Open modal with selected media
   const openMedia = (item, index) => {
     setSelectedMedia(item);
     setCurrentIndex(index);
   };
+
+  // Close modal
   const closeMedia = () => setSelectedMedia(null);
 
+  // Navigate to previous media in modal
   const handlePrev = () => {
     const prev = (currentIndex - 1 + mediaItems.length) % mediaItems.length;
     setCurrentIndex(prev);
     setSelectedMedia(mediaItems[prev]);
   };
+
+  // Navigate to next media in modal
   const handleNext = () => {
     const next = (currentIndex + 1) % mediaItems.length;
     setCurrentIndex(next);
     setSelectedMedia(mediaItems[next]);
   };
 
-  const scrollLeft = () => scrollRef.current?.scrollBy({ left: 340,  behavior: "smooth" });
-  const scrollRight = () => scrollRef.current?.scrollBy({ left: -340, behavior: "smooth" });
-
-useEffect(() => {
-  if (!selectedMedia) return;
-
-  const handleKeyDown = (e) => {
-    if (e.key === "ArrowLeft")  handlePrev();
-    if (e.key === "ArrowRight") handleNext();
-    if (e.key === "Escape")     closeMedia();
-  };
-  document.addEventListener("keydown", handleKeyDown);
-
-  const modalEl = document.querySelector(".modal-media");
-  if (!modalEl) {
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }
-
-  let startX = 0;
-  let isSwiping = false;
-
-  const handleTouchStart = (e) => {
-    startX = e.touches[0].clientX;
-    isSwiping = true;
+  // Scroll gallery left (to previous items)
+  const scrollLeft = () => {
+    const scrollElement = scrollRef.current;
+    if (scrollElement && scrollElement.scrollLeft > 0) {
+      const item = scrollElement.querySelector('.gallery-item');
+      const track = scrollElement.querySelector('.gallery-track');
+      const gap = parseFloat(getComputedStyle(track).gap) || 0;
+      const scrollAmount = item.offsetWidth + gap;
+      scrollElement.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+    }
   };
 
-  const handleTouchMove = (e) => {
-    if (!isSwiping) return;
-    const moveX = e.touches[0].clientX - startX;
-    modalEl.style.transform = `translateX(${moveX * 0.3}px)`;
+  // Scroll gallery right (to next items)
+  const scrollRight = () => {
+    const scrollElement = scrollRef.current;
+    if (scrollElement) {
+      const maxScrollLeft = scrollElement.scrollWidth - scrollElement.clientWidth;
+      if (scrollElement.scrollLeft < maxScrollLeft) {
+        const item = scrollElement.querySelector('.gallery-item');
+        const track = scrollElement.querySelector('.gallery-track');
+        const gap = parseFloat(getComputedStyle(track).gap) || 0;
+        const scrollAmount = item.offsetWidth + gap;
+        scrollElement.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      }
+    }
   };
 
-  const handleTouchEnd = (e) => {
-    if (!isSwiping) return;
-    const endX = e.changedTouches[0].clientX;
-    const diff = endX - startX;
+  // Handle keyboard and touch navigation for modal
+  useEffect(() => {
+    if (!selectedMedia) return;
 
-    modalEl.style.transform = "translateX(0)";
-    isSwiping = false;
+    // Keyboard navigation
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowLeft")  handlePrev();
+      if (e.key === "ArrowRight") handleNext();
+      if (e.key === "Escape")     closeMedia();
+    };
+    document.addEventListener("keydown", handleKeyDown);
 
-    if (diff > 50)      handlePrev();
-    else if (diff < -50) handleNext();
-  };
+    const modalEl = document.querySelector(".modal-media");
+    if (!modalEl) {
+      return () => document.removeEventListener("keydown", handleKeyDown);
+    }
 
-  modalEl.addEventListener("touchstart", handleTouchStart, { passive: true });
-  modalEl.addEventListener("touchmove",  handleTouchMove,  { passive: true });
-  modalEl.addEventListener("touchend",   handleTouchEnd);
+    // Touch swipe handling
+    let startX = 0;
+    let isSwiping = false;
 
-  return () => {
-    document.removeEventListener("keydown", handleKeyDown);
-    modalEl.removeEventListener("touchstart", handleTouchStart);
-    modalEl.removeEventListener("touchmove",  handleTouchMove);
-    modalEl.removeEventListener("touchend",   handleTouchEnd);
-  };
-}, [selectedMedia, currentIndex]);
+    const handleTouchStart = (e) => {
+      startX = e.touches[0].clientX;
+      isSwiping = true;
+    };
+
+    const handleTouchMove = (e) => {
+      if (!isSwiping) return;
+      const moveX = e.touches[0].clientX - startX;
+      modalEl.style.transform = `translateX(${moveX * 0.3}px)`;
+    };
+
+    const handleTouchEnd = (e) => {
+      if (!isSwiping) return;
+      const endX = e.changedTouches[0].clientX;
+      const diff = endX - startX;
+
+      modalEl.style.transform = "translateX(0)";
+      isSwiping = false;
+
+      if (diff > 50)      handlePrev();
+      else if (diff < -50) handleNext();
+    };
+
+    modalEl.addEventListener("touchstart", handleTouchStart, { passive: true });
+    modalEl.addEventListener("touchmove",  handleTouchMove,  { passive: true });
+    modalEl.addEventListener("touchend",   handleTouchEnd);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      modalEl.removeEventListener("touchstart", handleTouchStart);
+      modalEl.removeEventListener("touchmove",  handleTouchMove);
+      modalEl.removeEventListener("touchend",   handleTouchEnd);
+    };
+  }, [selectedMedia, currentIndex]);
 
   return (
     <section className="gallery" dir="rtl">
@@ -98,7 +134,7 @@ useEffect(() => {
         <h2 className="gallery-title">זיכרונות של בן</h2>
 
         <div className="gallery-wrapper">
-          <button className="scroll-btn scroll-left" onClick={scrollLeft} aria-label="גלילה ימינה">
+          <button className="scroll-btn scroll-right" onClick={scrollRight} aria-label="Scroll right">
             <svg viewBox="0 0 24 24">
               <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
             </svg>
@@ -131,7 +167,7 @@ useEffect(() => {
             </div>
           </div>
 
-          <button className="scroll-btn scroll-right" onClick={scrollRight} aria-label="גלילה שמאלה">
+          <button className="scroll-btn scroll-left" onClick={scrollLeft} aria-label="Scroll left">
             <svg viewBox="0 0 24 24">
               <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
             </svg>
