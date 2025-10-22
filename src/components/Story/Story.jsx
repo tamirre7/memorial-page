@@ -49,7 +49,7 @@ export default function Story() {
                 <path d="M8 5v14l11-7z"/>
               )}
             </svg>
-            <span>{isPlaying ? 'עצור' : 'האזן לנגינה של בן'}</span>
+            <span>{isPlaying ? 'עצור' : 'האזינו לנגינה של בן'}</span>
           </button>
         </div>
 

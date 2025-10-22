@@ -131,7 +131,7 @@ export default function Gallery() {
   return (
     <section className="gallery" dir="rtl">
       <div className="gallery-container">
-        <h2 className="gallery-title">זיכרונות של בן</h2>
+        <h2 className="gallery-title">זכרונות מבן</h2>
 
         <div className="gallery-wrapper">
           <button className="scroll-btn scroll-right" onClick={scrollRight} aria-label="Scroll right">

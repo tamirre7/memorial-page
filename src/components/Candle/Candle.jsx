@@ -96,8 +96,8 @@ export default function Candle() {
   return (
     <section className="candle-section" dir="rtl">
       <div className="candle-container">
-        <h2 className="candle-title">הדלק נר לזכרו של בן</h2>
-        <p className="candle-subtitle">לחץ על הנר כדי להדליק</p>
+        <h2 className="candle-title">הדליקו נר לזכרו של בן</h2>
+        <p className="candle-subtitle">לחצו על הנר כדי להדליק</p>
 
         {/* Interactive candle area */}
         <div className="candle-interactive">
