@@ -33,8 +33,18 @@ export default function Gallery() {
     setSelectedMedia(mediaItems[next]);
   };
 
-  const scrollLeft = () => scrollRef.current?.scrollBy({ left: 340,  behavior: "smooth" });
-  const scrollRight = () => scrollRef.current?.scrollBy({ left: -340, behavior: "smooth" });
+  const scrollLeft = () => {
+    const scrollEl = scrollRef.current;
+    if (scrollEl && scrollEl.scrollLeft + scrollEl.clientWidth < scrollEl.scrollWidth) {
+      scrollEl.scrollBy({ left: 340, behavior: "smooth" });
+    }
+  };
+  const scrollRight = () => {
+    const scrollEl = scrollRef.current;
+    if (scrollEl && scrollEl.scrollLeft > 0) {
+      scrollEl.scrollBy({ left: -340, behavior: "smooth" });
+    }
+  };
 
   // ✨ ניווט במקלדת + החלקת אצבע במודל (רק על המדיה עצמה)
   useEffect(() => {
