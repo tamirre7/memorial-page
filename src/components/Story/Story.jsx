@@ -1,6 +1,8 @@
 import "./Story.css";
 import { useState, useRef } from "react";
 
+const BASE = import.meta.env.BASE_URL;
+
 export default function Story() {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
@@ -21,7 +23,7 @@ export default function Story() {
     <section className="story" dir="rtl">
       <audio 
         ref={audioRef}
-        src="/assets/audio/ben-piano.mp3"
+        src={`${BASE}assets/audio/ben-piano.mp3`}
         onEnded={() => setIsPlaying(false)}
         onPause={() => setIsPlaying(false)}
         onPlay={() => setIsPlaying(true)}
