@@ -9,11 +9,14 @@ export default function Gallery() {
   const scrollRef = useRef(null);
 
   const mediaItems = [
-    { type: "image", src: `${BASE}assets/images/gallery-01.jpg`, alt: "זיכרון של בן" },
+    { type: "image", src: `${BASE}assets/images/gallery-01.jpg`, alt: "זיכרון של בן", previewClass: "focus-top-more" },
     { type: "video", src: `${BASE}assets/video/gallery-01.mp4`, poster: `${BASE}assets/images/video-tn.png`, alt: "סרטון של בן" },
-    { type: "image", src: `${BASE}assets/images/gallery-02.jpg`, alt: "זיכרון של בן" },
-    { type: "image", src: `${BASE}assets/images/gallery-03.jpg`, alt: "זיכרון של בן" },
+    { type: "image", src: `${BASE}assets/images/gallery-02.jpg`, alt: "זיכרון של בן", previewClass: "focus-top-extra" },
+    { type: "image", src: `${BASE}assets/images/gallery-03.jpg`, alt: "זיכרון של בן", previewClass: "focus-top" },
     { type: "image", src: `${BASE}assets/images/gallery-04.jpg`, alt: "זיכרון של בן" },
+    { type: "image", src: `${BASE}assets/images/gallery-05.jpg`, alt: "זיכרון של בן" },
+    { type: "image", src: `${BASE}assets/images/gallery-06.jpg`, alt: "זיכרון של בן" },
+    { type: "image", src: `${BASE}assets/images/portrait.jpg`, alt: "פורטרט של בן", previewClass: "focus-top", modalClass: "focus-top" },
   ];
 
   const openMedia = (item, index) => {
@@ -125,7 +128,7 @@ export default function Gallery() {
                       </div>
                     </>
                   ) : (
-                    <img src={item.src} alt={item.alt} className="gallery-media" />
+                    <img src={item.src} alt={item.alt} className={`gallery-media ${item.previewClass || ''}`} />
                   )}
                 </div>
               ))}
@@ -147,7 +150,7 @@ export default function Gallery() {
             {selectedMedia.type === "video" ? (
               <video src={selectedMedia.src} controls autoPlay className="modal-media" />
             ) : (
-              <img src={selectedMedia.src} alt={selectedMedia.alt} className="modal-media" />
+              <img src={selectedMedia.src} alt={selectedMedia.alt} className={`modal-media ${selectedMedia.modalClass || ''}`} />
             )}
           </div>
         </div>

@@ -77,8 +77,17 @@ const getServerDateISO = () => {
       setTimeout(() => {
         setShowThanks(true);
         setTimeout(() => {
-          setShowThanks(false);
-        }, 2000);
+          // Add fade-out class for smooth disappearance
+          const messageEl = document.querySelector('.thanks-message');
+          if (messageEl) {
+            messageEl.classList.add('fade-out');
+            setTimeout(() => {
+              setShowThanks(false);
+            }, 500); // Wait for fade-out animation
+          } else {
+            setShowThanks(false);
+          }
+        }, 3500); // Show for 3.5 seconds before starting fade-out
       }, 1000);
     } catch (error) {
       console.error('Error lighting candle:', error);

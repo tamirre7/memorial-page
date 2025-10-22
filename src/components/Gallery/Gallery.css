@@ -114,6 +114,8 @@
   object-position: center; /* ברירת מחדל */
 }
 .focus-top      { object-position: center 15%; }
+.focus-top-more { object-position: center 10%; }
+.focus-top-extra{ object-position: center 5%; }
 .focus-bottom   { object-position: center 85%; }
 .focus-left     { object-position: 15% center; }
 .focus-right    { object-position: 85% center; }
