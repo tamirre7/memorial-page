@@ -29,7 +29,7 @@
 /* ========== 2) Layout wrappers ========== */
 .candle-section{
   background: transparent;
-  padding: 1.5rem 0 3rem;
+  padding: 2rem 0 3rem;
   display:flex; align-items:center; justify-content:center;
   margin-top:0;
 }

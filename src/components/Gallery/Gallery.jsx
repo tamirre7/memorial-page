@@ -22,12 +22,16 @@ export default function Gallery() {
   };
   const closeMedia = () => setSelectedMedia(null);
 
-  const scrollLeft = () => scrollRef.current?.scrollBy({ left: 320,  behavior: "smooth" });
-  const scrollRight = () => scrollRef.current?.scrollBy({ left: -320, behavior: "smooth" });
+  const scrollLeft = () => scrollRef.current?.scrollBy({ left: 340,  behavior: "smooth" });
+  const scrollRight = () => scrollRef.current?.scrollBy({ left: -340, behavior: "smooth" });
 
   // Add swipe navigation in modal
   useEffect(() => {
     if (!selectedMedia) return;
+
+    let startX = 0;
+    let startY = 0;
+    let isSwiping = false;
 
     const handleKeyDown = (e) => {
       if (e.key === 'ArrowLeft') {
@@ -44,36 +48,51 @@ export default function Gallery() {
     };
 
     const handleTouchStart = (e) => {
-      const startX = e.touches[0].clientX;
-      
-      const handleTouchEnd = (e) => {
-        const endX = e.changedTouches[0].clientX;
-        const diff = startX - endX;
-        
-        if (Math.abs(diff) > 50) { // Minimum swipe distance
-          if (diff > 0) {
-            // Swipe left = go to next
-            const nextIndex = (currentIndex + 1) % mediaItems.length;
-            setCurrentIndex(nextIndex);
-            setSelectedMedia(mediaItems[nextIndex]);
-          } else {
-            // Swipe right = go to previous
-            const prevIndex = (currentIndex - 1 + mediaItems.length) % mediaItems.length;
-            setCurrentIndex(prevIndex);
-            setSelectedMedia(mediaItems[prevIndex]);
-          }
-        }
-      };
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      isSwiping = true;
+    };
 
-      document.addEventListener('touchend', handleTouchEnd, { once: true });
+    const handleTouchMove = (e) => {
+      if (!isSwiping) return;
+      e.preventDefault(); // Prevent scrolling while swiping
+    };
+
+    const handleTouchEnd = (e) => {
+      if (!isSwiping) return;
+      isSwiping = false;
+
+      const endX = e.changedTouches[0].clientX;
+      const endY = e.changedTouches[0].clientY;
+      const diffX = startX - endX;
+      const diffY = startY - endY;
+
+      // Only consider horizontal swipes (ignore vertical scrolls)
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 30) { // Reduced threshold for better responsiveness
+        if (diffX > 0) {
+          // Swipe left = go to next
+          const nextIndex = (currentIndex + 1) % mediaItems.length;
+          setCurrentIndex(nextIndex);
+          setSelectedMedia(mediaItems[nextIndex]);
+        } else {
+          // Swipe right = go to previous
+          const prevIndex = (currentIndex - 1 + mediaItems.length) % mediaItems.length;
+          setCurrentIndex(prevIndex);
+          setSelectedMedia(mediaItems[prevIndex]);
+        }
+      }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('touchstart', handleTouchStart);
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchend', handleTouchEnd);
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
     };
   }, [selectedMedia, currentIndex, mediaItems]);
 
