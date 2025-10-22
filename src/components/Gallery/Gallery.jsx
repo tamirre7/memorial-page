@@ -26,79 +26,71 @@ export default function Gallery() {
   const closeMedia = () => setSelectedMedia(null);
 
   const handlePrev = () => {
-    if (currentIndex > 0) {
-      const prev = currentIndex - 1;
-      setCurrentIndex(prev);
-      setSelectedMedia(mediaItems[prev]);
-    }
+    const prev = (currentIndex - 1 + mediaItems.length) % mediaItems.length;
+    setCurrentIndex(prev);
+    setSelectedMedia(mediaItems[prev]);
   };
   const handleNext = () => {
-    if (currentIndex < mediaItems.length - 1) {
-      const next = currentIndex + 1;
-      setCurrentIndex(next);
-      setSelectedMedia(mediaItems[next]);
-    }
+    const next = (currentIndex + 1) % mediaItems.length;
+    setCurrentIndex(next);
+    setSelectedMedia(mediaItems[next]);
   };
 
   const scrollLeft = () => scrollRef.current?.scrollBy({ left: 340,  behavior: "smooth" });
   const scrollRight = () => scrollRef.current?.scrollBy({ left: -340, behavior: "smooth" });
 
-  // ✨ ניווט במקלדת + החלקת אצבע במודל (רק על המדיה עצמה)
-  useEffect(() => {
-    if (!selectedMedia) return;
+useEffect(() => {
+  if (!selectedMedia) return;
 
-    // תמיכה במקלדת (שמאל/ימין/ESC)
-    const handleKeyDown = (e) => {
-      if (e.key === "ArrowLeft")  handlePrev();
-      if (e.key === "ArrowRight") handleNext();
-      if (e.key === "Escape")     closeMedia();
-    };
-    document.addEventListener("keydown", handleKeyDown);
+  const handleKeyDown = (e) => {
+    if (e.key === "ArrowLeft")  handlePrev();
+    if (e.key === "ArrowRight") handleNext();
+    if (e.key === "Escape")     closeMedia();
+  };
+  document.addEventListener("keydown", handleKeyDown);
 
-    // מאזינים לנגיעות – רק על אלמנט המדיה במודל
-    const modalEl = document.querySelector(".modal-media");
-    if (!modalEl) {
-      return () => document.removeEventListener("keydown", handleKeyDown);
-    }
+  const modalEl = document.querySelector(".modal-media");
+  if (!modalEl) {
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }
 
-    let startX = 0;
-    let isSwiping = false;
+  let startX = 0;
+  let isSwiping = false;
 
-    const handleTouchStart = (e) => {
-      startX = e.touches[0].clientX;
-      isSwiping = true;
-    };
+  const handleTouchStart = (e) => {
+    startX = e.touches[0].clientX;
+    isSwiping = true;
+  };
 
-    const handleTouchMove = (e) => {
-      if (!isSwiping) return;
-      const moveX = e.touches[0].clientX - startX;
-      modalEl.style.transform = `translateX(${moveX * 0.3}px)`; // תחושת גרירה עדינה
-    };
+  const handleTouchMove = (e) => {
+    if (!isSwiping) return;
+    const moveX = e.touches[0].clientX - startX;
+    modalEl.style.transform = `translateX(${moveX * 0.3}px)`;
+  };
 
-    const handleTouchEnd = (e) => {
-      if (!isSwiping) return;
-      const endX = e.changedTouches[0].clientX;
-      const diff = endX - startX;
+  const handleTouchEnd = (e) => {
+    if (!isSwiping) return;
+    const endX = e.changedTouches[0].clientX;
+    const diff = endX - startX;
 
-      // החזרת התמונה למקום
-      modalEl.style.transform = "translateX(0)";
-      isSwiping = false;
+    modalEl.style.transform = "translateX(0)";
+    isSwiping = false;
 
-      if (diff > 50 && currentIndex > 0)      handlePrev(); // גרירה ימינה - רק אם לא בתחילת הגלריה
-      else if (diff < -50 && currentIndex < mediaItems.length - 1) handleNext(); // גרירה שמאלה - רק אם לא בסוף הגלריה
-    };
+    if (diff > 50)      handlePrev();
+    else if (diff < -50) handleNext();
+  };
 
-    modalEl.addEventListener("touchstart", handleTouchStart, { passive: true });
-    modalEl.addEventListener("touchmove",  handleTouchMove,  { passive: true });
-    modalEl.addEventListener("touchend",   handleTouchEnd);
+  modalEl.addEventListener("touchstart", handleTouchStart, { passive: true });
+  modalEl.addEventListener("touchmove",  handleTouchMove,  { passive: true });
+  modalEl.addEventListener("touchend",   handleTouchEnd);
 
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      modalEl.removeEventListener("touchstart", handleTouchStart);
-      modalEl.removeEventListener("touchmove",  handleTouchMove);
-      modalEl.removeEventListener("touchend",   handleTouchEnd);
-    };
-  }, [selectedMedia, currentIndex]); // mediaItems קבוע; אין צורך להוסיף לתלויות
+  return () => {
+    document.removeEventListener("keydown", handleKeyDown);
+    modalEl.removeEventListener("touchstart", handleTouchStart);
+    modalEl.removeEventListener("touchmove",  handleTouchMove);
+    modalEl.removeEventListener("touchend",   handleTouchEnd);
+  };
+}, [selectedMedia, currentIndex]);
 
   return (
     <section className="gallery" dir="rtl">

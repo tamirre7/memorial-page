@@ -111,7 +111,7 @@
 
 .gallery-media{
   width: 100%; height: 100%; object-fit: cover; border-radius: 15px;
-  object-position: center; /* ברירת מחדל */
+  object-position: center;
 }
 .focus-top      { object-position: center 15%; }
 .focus-top-more { object-position: center 10%; }
@@ -226,27 +226,13 @@
   .gallery-track{ gap: .8rem; }
 }
 
-/* --- FIX: להציג את החצים על הכפתורים במובייל --- */
-
-/* צבע ברירת מחדל ללחצן ול־SVG שבתוכו */
+/* Ensure arrows are visible on mobile */
 .scroll-btn{ color:#fff; }
-
-/* כל הצורות בתוך ה-SVG יקבלו לבן, לא משנה אם הן fill או stroke */
 .scroll-btn svg,
 .scroll-btn svg *{
   fill: #fff !important;
   stroke: #fff !important;
-  stroke-width: 2;                /* לחיצות קו דקות ייראו טוב */
+  stroke-width: 2;
   vector-effect: non-scaling-stroke;
   display: block !important;
-}
-
-/* תיקון הטעות במובייל הקטן: "fill: white !;" */
-@media (max-width:480px){
-  .scroll-btn svg{ width:28px; height:28px; }
-}
-
-/* לטאבלט ומטה – גודל חץ נוח */
-@media (max-width:768px){
-  .scroll-btn svg{ width:32px; height:32px; }
 }

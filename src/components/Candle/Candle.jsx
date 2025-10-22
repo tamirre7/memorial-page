@@ -10,88 +10,73 @@ export default function Candle() {
   const [isLoading, setIsLoading] = useState(true);
   const [busy, setBusy] = useState(false);
 
-  // Get server date in ISO format (YYYY-MM-DD)
-  // Get local date in ISO format (YYYY-MM-DD)
 const getServerDateISO = () => {
   return new Date().toISOString().slice(0, 10);
 };
 
 
-  // Load candle count from Firebase once
-  useEffect(() => {
+useEffect(() => {
   const loadCandleData = async () => {
     try {
-      // 1) טען את מונה הנרות מה־DB
       const candlesRef = ref(database, 'counters/candles');
       const snapshot = await get(candlesRef);
       const data = snapshot.val();
       if (data !== null) setCandlesLit(data);
 
-      // 2) הבא תאריך שרת (UTC, פורמט YYYY-MM-DD)
       const todayKey = await getServerDateISO();
-
-      // 3) בדוק אם המשתמש כבר הדליק היום (לפי localStorage)
       const lastLit = localStorage.getItem('candle_last_lit');
       if (lastLit === todayKey) {
         setIsLit(true);
       }
     } catch (err) {
       console.error('Error loading candle data:', err);
-      // לא חוסם את המשתמש; פשוט נמשיך
     } finally {
       setIsLoading(false);
     }
   };
 
   loadCandleData();
-}, []); // ← חשוב מאוד! סוגריים עגולים + סוגריים מסולסלות + סוגריים מרובעים
+}, []);
 
   const lightCandle = async () => {
     if (isLit || isLoading || busy) return;
     setBusy(true);
 
     try {
-      // Atomically increment global counter
       const candlesRef = ref(database, 'counters/candles');
       const { committed, snapshot } = await runTransaction(candlesRef, (currentValue) => (currentValue ?? 0) + 1);
 
       if (committed) {
-        // Mark as lit for today (using server time)
         const todayKey = await getServerDateISO();
         try {
           localStorage.setItem('candle_last_lit', todayKey);
         } catch (error) {
           console.warn('localStorage not available:', error);
-          // Continue without localStorage user can still light candle
         }
         setIsLit(true);
         setCandlesLit(snapshot.val() ?? 0);
       } else {
-        // If transaction failed, still light the candle locally
         console.warn('Transaction failed, lighting candle locally');
         setIsLit(true);
         setCandlesLit(prev => prev + 1);
       }
 
-      // Show thanks message after animation
       setTimeout(() => {
         setShowThanks(true);
         setTimeout(() => {
-          // Add fade-out class for smooth disappearance
           const messageEl = document.querySelector('.thanks-message');
           if (messageEl) {
             messageEl.classList.add('fade-out');
             setTimeout(() => {
               setShowThanks(false);
-            }, 500); // Wait for fade-out animation
+            }, 500);
           } else {
             setShowThanks(false);
           }
-        }, 3500); // Show for 3.5 seconds before starting fade-out
+        }, 3500);
       }, 1000);
     } catch (error) {
       console.error('Error lighting candle:', error);
-      // Fallback: light candle locally even if Firebase fails
       setIsLit(true);
       setCandlesLit(prev => prev + 1);
     } finally {
@@ -130,7 +115,7 @@ const getServerDateISO = () => {
           <div className="counter-number">
             {isLoading ? "..." : candlesLit}
           </div>
-          <div className="counter-text">נרות נדלקו לזכרו</div>
+          <div className="counter-text">נרות נדלקו עד כה</div>
         </div>
       </div>
     </section>
