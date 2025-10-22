@@ -128,7 +128,7 @@ export default function Candle() {
           <div className="counter-number">
             {isLoading ? "..." : candlesLit}
           </div>
-          <div className="counter-text">נרות נדלקו עד כה</div>
+          <div className="counter-text">נרות הודלקו עד כה</div>
         </div>
       </div>
     </section>
