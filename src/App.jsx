@@ -1,5 +1,3 @@
-import './App.css';
-
 import Hero from './components/Hero/Hero';
 import Story from './components/Story/Story';
 import Gallery from './components/Gallery/Gallery';
