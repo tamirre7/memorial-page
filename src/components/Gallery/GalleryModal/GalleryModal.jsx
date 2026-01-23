@@ -33,15 +33,16 @@ export default function GalleryModal({
           onClick={onPrev}
           aria-label="קודם"
         >
-          <ChevronLeft size={24} />
+          <ChevronLeft />
         </button>
+
         <button
           type="button"
           className="modal-nav modal-next"
           onClick={onNext}
           aria-label="הבא"
         >
-          <ChevronRight size={24} />
+          <ChevronRight />
         </button>
 
         {item.type === 'video' ? (
