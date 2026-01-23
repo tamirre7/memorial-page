@@ -34,8 +34,8 @@
   position: absolute;
   top: 16px;
   right: 16px;
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   cursor: pointer;
   background: rgba(0, 0, 0, 0.75);
@@ -66,8 +66,8 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 60px;
-  height: 60px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
@@ -107,8 +107,8 @@
   }
 
   .close-btn {
-    width: 52px;
-    height: 52px;
+    width: 46px;
+    height: 46px;
     top: 12px;
     right: 12px;
   }
@@ -119,8 +119,8 @@
   }
 
   .modal-nav {
-    width: 52px;
-    height: 52px;
+    width: 48px;
+    height: 48px;
   }
 
   .modal-nav svg {

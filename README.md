@@ -1,16 +1,63 @@
-# React + Vite
+# Memorial Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive memorial website featuring a photo gallery, life story, and virtual candle lighting.
 
-Currently, two official plugins are available:
+## Content Management
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Adding Images to Gallery
 
-## React Compiler
+1. Upload image to `public/assets/images/`
+2. Update `src/content/gallery.js`:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```javascript
+{
+  type: 'image',
+  src: 'assets/images/image-name.jpg',
+  alt: 'Image description',
+  ratio: '3 / 4',  // or '4 / 3' for landscape images
+}
+```
 
-## Expanding the ESLint configuration
+### Updating Texts
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Life Story**: `src/content/story.js`
+- **Candle Section**: `src/content/candle.js`
+- **Gallery**: `src/content/gallery.js`
+
+### Adding Video
+
+1. Upload video to `public/assets/video/`
+2. Upload poster image to `public/assets/images/`
+3. Update `gallery.js`:
+
+```javascript
+{
+  type: 'video',
+  src: 'assets/video/video-name.mp4',
+  poster: 'assets/images/poster-image.png',
+  alt: 'Video description',
+  ratio: '4 / 3',
+}
+```
+
+## Project Structure
+
+```
+src/
+├── components/     # React components
+│   ├── Candle/     # Candle lighting
+│   ├── Gallery/   # Photo gallery
+│   ├── Story/     # Life story
+│   └── ...
+├── content/       # Content files (texts, paths)
+├── hooks/         # Custom hooks
+└── firebase.js    # Firebase configuration
+```
+
+## Firebase
+
+The website uses Firebase Realtime Database for the candle counter. Ensure you have `src/firebase.js` configured with your connection details.
+
+## License
+
+Private project - In memory of my friend Ben.
