@@ -130,6 +130,7 @@
   line-height: 1.6;
   font-family: 'Georgia', serif;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .story-quote cite {
