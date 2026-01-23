@@ -106,33 +106,37 @@
     padding: 0.5rem;
   }
 
+  /* Close button (X) */
   .close-btn {
-    width: 46px;
-    height: 46px;
-    top: 12px;
-    right: 12px;
+    width: 40px;
+    height: 40px;
+    top: 10px;
+    right: 10px;
+    border-radius: 12px;
   }
 
   .close-btn svg {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
   }
 
+  /* Arrows */
   .modal-nav {
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
   }
 
   .modal-nav svg {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
   }
 
   .modal-prev {
-    left: 16px;
+    left: 10px;
   }
 
   .modal-next {
-    right: 16px;
+    right: 10px;
   }
 }
