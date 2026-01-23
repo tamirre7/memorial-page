@@ -1,30 +1,21 @@
-import Hero from "./components/Hero/Hero";
-import Story from "./components/Story/Story";
-import Gallery from "./components/Gallery/Gallery";
-import Candle from "./components/Candle/Candle";
-import Footer from "./components/Footer/Footer";
+import './App.css';
 
-// Main App component - renders all sections of the memorial page
-function App() {
+import Hero from './components/Hero/Hero';
+import Story from './components/Story/Story';
+import Gallery from './components/Gallery/Gallery';
+import Candle from './components/Candle/Candle';
+import Footer from './components/Footer/Footer';
+
+export default function App() {
   return (
-    <div className="page-soft-bg">
-      {/* Hero section at the top of the page */}
+    <div className="page-soft-bg" dir="rtl">
       <Hero />
-
-      {/* Story section */}
-      <Story />
-
-      {/* Gallery section */}
-      <Gallery />
-
-      {/* Candle section */}
-      <Candle />
-
-      {/* Footer */}
+      <main>
+        <Story />
+        <Gallery />
+        <Candle />
+      </main>
       <Footer />
     </div>
   );
 }
-
-export default App;
-

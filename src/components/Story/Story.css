@@ -1,4 +1,4 @@
-.story{
+.story {
   background: transparent;
   padding: 1.5rem 0 2rem;
   display: flex;
@@ -62,14 +62,14 @@
 .play-icon {
   width: 20px;
   height: 20px;
-  fill: currentColor;
+  stroke: currentColor;
+  fill: none;
 }
 
 .story-content {
   line-height: 1.8;
   color: #2c3e50;
 }
-
 
 .story-text {
   background: rgba(255, 255, 255, 0.6);
@@ -140,27 +140,27 @@
     align-items: center;
     justify-content: space-between;
   }
-  
+
   .story-title {
     font-size: 2rem;
     flex: 1;
     text-align: right;
   }
-  
+
   .audio-player-btn {
     flex-shrink: 0;
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
   }
-  
+
   .story-container {
     padding: 0 1rem;
   }
-  
+
   .story-text {
     padding: 1.5rem;
   }
-  
+
   .story-quote {
     padding: 2rem;
   }

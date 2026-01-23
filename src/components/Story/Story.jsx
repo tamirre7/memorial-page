@@ -1,88 +1,71 @@
-import "./Story.css";
-import { useState, useRef } from "react";
+import './Story.css';
+import { Play, Pause } from 'lucide-react';
+import { useAudioPlayer } from '../../hooks/useAudioPlayer';
+import { STORY } from '../../content/story';
 
-// Base URL for assets
 const BASE = import.meta.env.BASE_URL;
 
 export default function Story() {
-  // State for audio playback
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(null);
-
-  // Toggle audio play/pause
-  const toggleAudio = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        audioRef.current.play();
-        setIsPlaying(true);
-      }
-    }
-  };
+  const { audioRef, isPlaying, onPlay, onPause, onEnded, toggle } =
+    useAudioPlayer();
+  const audioId = 'ben-audio';
 
   return (
-    <section className="story" dir="rtl">
-      {/* Hidden audio element */}
+    <section className="story" dir="rtl" aria-labelledby="story-title">
       <audio
+        id={audioId}
         ref={audioRef}
-        src={`${BASE}assets/audio/ben-piano.mp3`}
-        onEnded={() => setIsPlaying(false)}
-        onPause={() => setIsPlaying(false)}
-        onPlay={() => setIsPlaying(true)}
+        src={`${BASE}${STORY.audio.src}`}
+        onPlay={onPlay}
+        onPause={onPause}
+        onEnded={onEnded}
+        preload="metadata"
       />
 
       <div className="story-container">
-        {/* Header with title and audio player */}
-        <div className="story-header">
-          <h2 className="story-title">על בן שלנו</h2>
-          <button
-            className={`audio-player-btn ${isPlaying ? 'playing' : ''}`}
-            onClick={toggleAudio}
-            aria-label="נגן הקלטה של בן"
-          >
-            <svg className="play-icon" viewBox="0 0 24 24" fill="currentColor">
-              {isPlaying ? (
-                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
-              ) : (
-                <path d="M8 5v14l11-7z"/>
-              )}
-            </svg>
-            <span>{isPlaying ? 'עצור' : 'האזינו לנגינה של בן'}</span>
-          </button>
-        </div>
+        <header className="story-header">
+          <h2 id="story-title" className="story-title">
+            {STORY.title}
+          </h2>
 
-        {/* Main story content */}
+          <button
+            type="button"
+            className={`audio-player-btn ${isPlaying ? 'playing' : ''}`}
+            onClick={toggle}
+            aria-label={
+              isPlaying ? STORY.audio.stopLabel : STORY.audio.playLabel
+            }
+            aria-pressed={isPlaying}
+            aria-controls={audioId}
+          >
+            {isPlaying ? (
+              <Pause className="play-icon" aria-hidden="true" />
+            ) : (
+              <Play className="play-icon" aria-hidden="true" />
+            )}
+            <span>
+              {isPlaying ? STORY.audio.stopText : STORY.audio.playText}
+            </span>
+          </button>
+        </header>
+
         <div className="story-content">
           <div className="story-text">
-            <p>
-              בן היה אדם עם נשמה של מוזיקה ולב של צחוק.
-              הוא אהב מוזיקה ישראלית אמיתית, כזו שמגיעה מהלב ומדברת אל הנשמה.
-              פסנתרן מוכשר, שהצליל שלו היה תמיד מלווה בחיוך, באירוניה עדינה ובחום אנושי נדיר.
-            </p>
+            {STORY.paragraphs.map((text, idx) => (
+              <p key={idx}>{text}</p>
+            ))}
 
-            <p>
-              היה בו שילוב מיוחד של עומק הומור ו-10 גרם ירוק, אחד שידע להצחיק, לחשוב, ולרגש באותו משפט.
-              החברים זוכרים אותו כמי שידע להפוך כל רגע קטן לזיכרון גדול,
-              והמשפחה כבן אהוב, שמותיר אחריו מנגינה שלא תישכח.
-            </p>
-
-            <p className="story-signature">
-              אוהבים ומתגעגעים – משפחתו וחבריו של בן קליין
-            </p>
+            <p className="story-signature">{STORY.signature}</p>
           </div>
-
         </div>
 
-        {/* Quote section */}
         <div className="story-quote-section">
-          <div className="story-quote">
-            <blockquote>
-              "ריקוד בין יאוש לאמונה"
-            </blockquote>
-            <cite>— אביתר בנאי</cite>
-          </div>
+          <figure className="story-quote">
+            <blockquote>{STORY.quote.text}</blockquote>
+            <figcaption>
+              <cite>{STORY.quote.author}</cite>
+            </figcaption>
+          </figure>
         </div>
       </div>
     </section>
