@@ -95,7 +95,7 @@ export default function Gallery() {
             onClick={nextSlide}
             aria-label="הבא"
           >
-            <ChevronRight size={28} aria-hidden="true" />
+            <ChevronRight aria-hidden="true" />
           </button>
 
           <div className="gallery-scroll" ref={emblaRef}>
@@ -146,7 +146,7 @@ export default function Gallery() {
             onClick={prevSlide}
             aria-label="הקודם"
           >
-            <ChevronLeft size={28} aria-hidden="true" />
+            <ChevronLeft aria-hidden="true" />
           </button>
         </div>
       </div>
