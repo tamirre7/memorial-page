@@ -1,192 +1,163 @@
-import "./Gallery.css";
-import { useState, useRef, useEffect } from "react";
+import './Gallery.css';
+import { useCallback, useEffect, useMemo } from 'react';
+import useEmblaCarousel from 'embla-carousel-react';
+import Autoplay from 'embla-carousel-autoplay';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
 
-// Base URL for assets
+import { GALLERY } from '../../content/gallery';
+import { useGalleryModal } from '../../hooks/useGalleryModal';
+import GalleryModal from './GalleryModal/GalleryModal';
+
 const BASE = import.meta.env.BASE_URL;
 
 export default function Gallery() {
-  // State for modal media and current index
-  const [selectedMedia, setSelectedMedia] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const scrollRef = useRef(null);
+  const items = GALLERY.items;
+  const resolve = useCallback((path) => `${BASE}${path}`, []);
 
-  // Array of media items with type, src, alt, and optional classes
-  const mediaItems = [
-    { type: "image", src: `${BASE}assets/images/gallery-01.jpg`, alt: "זיכרון של בן", previewClass: "focus-top-more" },
-    { type: "video", src: `${BASE}assets/video/gallery-01.mp4`, poster: `${BASE}assets/images/video-tn.png`, alt: "סרטון של בן" },
-    { type: "image", src: `${BASE}assets/images/gallery-02.jpg`, alt: "זיכרון של בן", previewClass: "focus-top-extra" },
-    { type: "image", src: `${BASE}assets/images/gallery-03.jpg`, alt: "זיכרון של בן", previewClass: "focus-top" },
-    { type: "image", src: `${BASE}assets/images/gallery-04.jpg`, alt: "זיכרון של בן" },
-    { type: "image", src: `${BASE}assets/images/gallery-05.jpg`, alt: "זיכרון של בן" },
-    { type: "image", src: `${BASE}assets/images/gallery-06.jpg`, alt: "זיכרון של בן" },
-    { type: "image", src: `${BASE}assets/images/portrait.jpg`, alt: "פורטרט של בן", previewClass: "focus-top", modalClass: "focus-top" },
-  ];
+  // Every 3 seconds
+  const autoplay = useMemo(
+    () =>
+      Autoplay(
+        { delay: 3000, stopOnInteraction: false, stopOnMouseEnter: false },
+        (emblaRoot) => emblaRoot.parentElement, // attaches listeners to viewport
+      ),
+    [],
+  );
 
-  // Open modal with selected media
-  const openMedia = (item, index) => {
-    setSelectedMedia(item);
-    setCurrentIndex(index);
-  };
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, align: 'start' },
+    [autoplay],
+  );
 
-  // Close modal
-  const closeMedia = () => setSelectedMedia(null);
+  const { index, isOpen, open, close, prev, next } = useGalleryModal(
+    items.length,
+  );
+  const selected = isOpen ? items[index] : null;
 
-  // Navigate to previous media in modal
-  const handlePrev = () => {
-    const prev = (currentIndex - 1 + mediaItems.length) % mediaItems.length;
-    setCurrentIndex(prev);
-    setSelectedMedia(mediaItems[prev]);
-  };
-
-  // Navigate to next media in modal
-  const handleNext = () => {
-    const next = (currentIndex + 1) % mediaItems.length;
-    setCurrentIndex(next);
-    setSelectedMedia(mediaItems[next]);
-  };
-
-  // Scroll gallery left (to previous items)
-  const scrollLeft = () => {
-    const scrollElement = scrollRef.current;
-    if (scrollElement && scrollElement.scrollLeft > 0) {
-      const item = scrollElement.querySelector('.gallery-item');
-      const track = scrollElement.querySelector('.gallery-track');
-      const gap = parseFloat(getComputedStyle(track).gap) || 0;
-      const scrollAmount = item.offsetWidth + gap;
-      scrollElement.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-    }
-  };
-
-  // Scroll gallery right (to next items)
-  const scrollRight = () => {
-    const scrollElement = scrollRef.current;
-    if (scrollElement) {
-      const maxScrollLeft = scrollElement.scrollWidth - scrollElement.clientWidth;
-      if (scrollElement.scrollLeft < maxScrollLeft) {
-        const item = scrollElement.querySelector('.gallery-item');
-        const track = scrollElement.querySelector('.gallery-track');
-        const gap = parseFloat(getComputedStyle(track).gap) || 0;
-        const scrollAmount = item.offsetWidth + gap;
-        scrollElement.scrollBy({ left: scrollAmount, behavior: "smooth" });
-      }
-    }
-  };
-
-  // Handle keyboard and touch navigation for modal
+  // Start autoplay when embla is ready
   useEffect(() => {
-    if (!selectedMedia) return;
-
-    // Keyboard navigation
-    const handleKeyDown = (e) => {
-      if (e.key === "ArrowLeft")  handlePrev();
-      if (e.key === "ArrowRight") handleNext();
-      if (e.key === "Escape")     closeMedia();
+    if (!emblaApi) return;
+    
+    const startAutoplay = () => {
+      if (!isOpen) autoplay.play();
     };
-    document.addEventListener("keydown", handleKeyDown);
-
-    const modalEl = document.querySelector(".modal-media");
-    if (!modalEl) {
-      return () => document.removeEventListener("keydown", handleKeyDown);
-    }
-
-    // Touch swipe handling
-    let startX = 0;
-    let isSwiping = false;
-
-    const handleTouchStart = (e) => {
-      startX = e.touches[0].clientX;
-      isSwiping = true;
-    };
-
-    const handleTouchMove = (e) => {
-      if (!isSwiping) return;
-      const moveX = e.touches[0].clientX - startX;
-      modalEl.style.transform = `translateX(${moveX * 0.3}px)`;
-    };
-
-    const handleTouchEnd = (e) => {
-      if (!isSwiping) return;
-      const endX = e.changedTouches[0].clientX;
-      const diff = endX - startX;
-
-      modalEl.style.transform = "translateX(0)";
-      isSwiping = false;
-
-      if (diff > 50)      handlePrev();
-      else if (diff < -50) handleNext();
-    };
-
-    modalEl.addEventListener("touchstart", handleTouchStart, { passive: true });
-    modalEl.addEventListener("touchmove",  handleTouchMove,  { passive: true });
-    modalEl.addEventListener("touchend",   handleTouchEnd);
-
+    
+    startAutoplay();
+    emblaApi.on('init', startAutoplay);
+    
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      modalEl.removeEventListener("touchstart", handleTouchStart);
-      modalEl.removeEventListener("touchmove",  handleTouchMove);
-      modalEl.removeEventListener("touchend",   handleTouchEnd);
+      emblaApi.off('init', startAutoplay);
     };
-  }, [selectedMedia, currentIndex]);
+  }, [emblaApi, autoplay, isOpen]);
+
+  const prevSlide = useCallback(() => {
+    if (emblaApi) {
+      autoplay.stop();
+      emblaApi.scrollPrev();
+      autoplay.reset();
+      autoplay.play();
+    }
+  }, [autoplay, emblaApi]);
+
+  const nextSlide = useCallback(() => {
+    if (emblaApi) {
+      autoplay.stop();
+      emblaApi.scrollNext();
+      autoplay.reset();
+      autoplay.play();
+    }
+  }, [autoplay, emblaApi]);
+
+  const openMedia = useCallback(
+    (i) => {
+      autoplay.stop(); // כשמודאל פתוח – לעצור
+      open(i);
+    },
+    [autoplay, open],
+  );
+
+  const closeMedia = useCallback(() => {
+    close();
+    autoplay.play(); // חשוב: להחזיר "ריצה" ולא רק reset
+  }, [autoplay, close]);
 
   return (
-    <section className="gallery" dir="rtl">
+    <section className="gallery" dir="rtl" aria-labelledby="gallery-title">
       <div className="gallery-container">
-        <h2 className="gallery-title">זכרונות מבן</h2>
+        <h2 id="gallery-title" className="gallery-title">
+          {GALLERY.title}
+        </h2>
 
         <div className="gallery-wrapper">
-          <button className="scroll-btn scroll-right" onClick={scrollRight} aria-label="Scroll right">
-            <svg viewBox="0 0 24 24">
-              <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
-            </svg>
+          <button
+            type="button"
+            className="scroll-btn scroll-right"
+            onClick={nextSlide}
+            aria-label="הבא"
+          >
+            <ChevronRight size={28} aria-hidden="true" />
           </button>
 
-          <div className="gallery-scroll" ref={scrollRef}>
+          <div className="gallery-scroll" ref={emblaRef}>
             <div className="gallery-track">
-              {mediaItems.map((item, index) => (
-                <div key={index} className="gallery-item" onClick={() => openMedia(item, index)}>
-                  {item.type === "video" ? (
+              {items.map((item, i) => (
+                <div
+                  key={`${item.type}-${item.src}`}
+                  className="gallery-item"
+                  style={item.ratio ? { aspectRatio: item.ratio } : undefined}
+                  onClick={() => openMedia(i)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === 'Enter' && openMedia(i)}
+                  aria-label={item.type === 'video' ? 'פתח סרטון' : 'פתח תמונה'}
+                >
+                  {item.type === 'video' ? (
                     <>
-                      <video
-                        src={item.src}
-                        className="gallery-media focus-bottom"
-                        muted
-                        preload="metadata"
-                        poster={item.poster}
+                      <img
+                        src={resolve(item.poster)}
+                        alt={item.alt}
+                        className="gallery-media"
+                        loading="lazy"
+                        decoding="async"
                       />
-                      <div className="play-overlay">
+                      <div className="play-overlay" aria-hidden="true">
                         <svg className="play-icon" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z"/>
+                          <path d="M8 5v14l11-7z" />
                         </svg>
                       </div>
                     </>
                   ) : (
-                    <img src={item.src} alt={item.alt} className={`gallery-media ${item.previewClass || ''}`} />
+                    <img
+                      src={resolve(item.src)}
+                      alt={item.alt}
+                      className={`gallery-media ${item.previewClass || ''}`}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   )}
                 </div>
               ))}
             </div>
           </div>
 
-          <button className="scroll-btn scroll-left" onClick={scrollLeft} aria-label="Scroll left">
-            <svg viewBox="0 0 24 24">
-              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-            </svg>
+          <button
+            type="button"
+            className="scroll-btn scroll-left"
+            onClick={prevSlide}
+            aria-label="הקודם"
+          >
+            <ChevronLeft size={28} aria-hidden="true" />
           </button>
         </div>
       </div>
 
-      {selectedMedia && (
-        <div className="media-modal" onClick={closeMedia}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-btn" onClick={closeMedia} aria-label="סגור" />
-            {selectedMedia.type === "video" ? (
-              <video src={selectedMedia.src} controls autoPlay className="modal-media" />
-            ) : (
-              <img src={selectedMedia.src} alt={selectedMedia.alt} className={`modal-media ${selectedMedia.modalClass || ''}`} />
-            )}
-          </div>
-        </div>
-      )}
+      <GalleryModal
+        item={selected}
+        resolve={resolve}
+        onClose={closeMedia}
+        onPrev={prev}
+        onNext={next}
+      />
     </section>
   );
 }
