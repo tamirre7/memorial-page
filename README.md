@@ -2,7 +2,7 @@
 
 **Live site:** https://tamirre7.github.io/memorial-page/
 
-A memorial website created in memory of a dear friend — designed to preserve stories, moments, and remembrance through an interactive experience.
+A memorial website created in memory of a dear friend, designed to preserve stories, moments, and remembrance through an interactive experience.
 
 ## Features
 
