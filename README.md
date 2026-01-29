@@ -48,8 +48,15 @@ This project was an opportunity to build a meaningful, production-ready React ap
 - Implemented error boundaries to catch and handle React component errors gracefully
 - Added comprehensive accessibility features (ARIA labels, keyboard navigation, semantic HTML)
 - Configured ESLint for code quality
-- Set up automated deployment with GitHub Actions
+- Set up automated deployment with GitHub Actions (including test run before build)
 - Created documentation for maintainability
+
+**Testing:**
+- Set up Vitest + React Testing Library for unit and integration tests
+- Wrote tests for custom hooks (useAudioPlayer, useTimedToast, useGalleryModal, useCandleCounter) using `renderHook` and `act`
+- Tested components (ErrorBoundary, LoadingSkeleton) with `render` and `screen`
+- Used mocks for Firebase and external dependencies so tests run without real API calls
+- Used fake timers for time-based logic (useTimedToast)
 
 **Technical Challenges Solved:**
 - Managed autoplay state synchronization between carousel and modal
