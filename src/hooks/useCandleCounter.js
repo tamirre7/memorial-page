@@ -65,11 +65,11 @@ export function useCandleCounter() {
         setCandlesLit((prev) => prev + 1);
       }
 
-      return true; // הצלחה (כדי שהקומפוננטה תדע להציג תודה)
+      return true; // Success (so component can show thank you message)
     } catch (error) {
       console.error('Error lighting candle:', error);
 
-      // degrade gracefully: נדליק מקומית
+      // Degrade gracefully: light locally if Firebase fails
       setIsLit(true);
       setCandlesLit((prev) => prev + 1);
       return false;

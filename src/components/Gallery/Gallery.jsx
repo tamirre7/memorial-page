@@ -70,7 +70,7 @@ export default function Gallery() {
 
   const openMedia = useCallback(
     (i) => {
-      autoplay.stop(); // כשמודאל פתוח – לעצור
+      autoplay.stop(); // Stop autoplay when modal opens
       open(i);
     },
     [autoplay, open],
@@ -78,7 +78,7 @@ export default function Gallery() {
 
   const closeMedia = useCallback(() => {
     close();
-    autoplay.play(); // חשוב: להחזיר "ריצה" ולא רק reset
+    autoplay.play(); // Resume autoplay when modal closes (not just reset)
   }, [autoplay, close]);
 
   return (

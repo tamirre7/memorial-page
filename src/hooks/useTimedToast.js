@@ -41,7 +41,7 @@ export function useTimedToast({
     );
   }, [clearTimers, delayMs, visibleMs, fadeMs]);
 
-  // ניקוי טיימרים כשהקומפוננטה יורדת (מונע memory leaks)
+  // Clean up timers when component unmounts (prevents memory leaks)
   useEffect(() => clearTimers, [clearTimers]);
 
   return {

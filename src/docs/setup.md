@@ -11,6 +11,16 @@
 npm install
 ```
 
+## Environment Setup
+
+1. Copy the example environment file:
+```bash
+cp .env.example .env
+```
+
+2. Edit `.env` and add your Firebase credentials (get them from Firebase Console > Project Settings > General > Your apps)
+
+
 ## Run locally
 
 ```bash

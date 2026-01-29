@@ -2,6 +2,7 @@ import './Candle.css';
 import { CANDLE } from '../../content/candle';
 import { useCandleCounter } from '../../hooks/useCandleCounter';
 import { useTimedToast } from '../../hooks/useTimedToast';
+import LoadingSkeleton from '../LoadingSkeleton/LoadingSkeleton';
 
 export default function Candle() {
   const { candlesLit, isLit, isLoading, busy, canLight, lightCandle } =
@@ -59,8 +60,17 @@ export default function Candle() {
         </div>
 
         <div className="candle-counter" aria-live="polite">
-          <div className="counter-number">{isLoading ? '...' : candlesLit}</div>
-          <div className="counter-text">{CANDLE.counterText}</div>
+          {isLoading ? (
+            <>
+              <LoadingSkeleton className="candle-skeleton-counter" />
+              <LoadingSkeleton className="candle-skeleton-text" />
+            </>
+          ) : (
+            <>
+              <div className="counter-number">{candlesLit}</div>
+              <div className="counter-text">{CANDLE.counterText}</div>
+            </>
+          )}
         </div>
       </div>
     </section>
