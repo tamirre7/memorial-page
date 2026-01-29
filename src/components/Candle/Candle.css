@@ -19,7 +19,7 @@
   --outer-glow: rgba(255, 180, 60, 0.35);
 
   background: transparent;
-  padding: 1.5rem 0 2rem;
+  padding: 0 0 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
