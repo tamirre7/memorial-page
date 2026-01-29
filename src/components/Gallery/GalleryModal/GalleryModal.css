@@ -26,7 +26,6 @@
   width: auto;
   height: auto;
   object-fit: contain;
-  border-radius: 10px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
@@ -52,8 +51,8 @@
 .close-btn svg {
   color: #fff;
   stroke-width: 3.5;
-  width: 36px;
-  height: 36px;
+  width: 48px;
+  height: 48px;
 }
 
 .close-btn:hover {
@@ -113,8 +112,8 @@
   }
 
   .close-btn svg {
-    width: 40px;
-    height: 40px;
+    width: 52px;
+    height: 52px;
     stroke-width: 3.8;
   }
 }
